@@ -1,9 +1,17 @@
 import React from 'react';
-
-export default function index() {
+import { Route, Switch } from 'react-router-dom';
+import {useRouteMatch} from 'react-router-dom';
+import HomePage from './pages/HomePage/index';
+import GalleryPage from './pages/YourGalleryPage/index';
+import NotFound from '../../components/NotFound/index';
+export default function Index(props) {
+  const match = useRouteMatch();
+  console.log(match);
   return (
-    <div>
-      hello
-    </div>
+    <Switch>
+      <Route exact path = {match.url} component = {HomePage}/>
+      <Route exact path={`${match.url}gallery`} component={GalleryPage} />
+      <Route component={NotFound}/>
+    </Switch>
   )
 }

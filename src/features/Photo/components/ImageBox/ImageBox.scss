@@ -1,0 +1,9 @@
+.homepage__card{
+  margin:0;
+  width:var(--card-width);
+  border-radius: var(--card-border-radius);
+  background-position: center;
+  &__image{
+    border-radius: 10px;
+  }
+}

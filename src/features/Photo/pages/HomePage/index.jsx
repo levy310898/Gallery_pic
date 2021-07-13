@@ -26,7 +26,7 @@ export default function HomePage() {
       // when you scroll down to 
       observer.current = new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) {
-          setPageNumber(pageNumber + 1);
+          setPageNumber(prev=>prev+1);
         }
       })
 
@@ -54,7 +54,7 @@ export default function HomePage() {
           limit: 40,
         }
       });
-      setListPics([...listPics, ...response.data]);
+      setListPics(prev=>[...prev, ...response.data]);
       setLoading(false);
     } catch (error) {
       message.error('something is wrong');
@@ -65,6 +65,8 @@ export default function HomePage() {
     return listPics.map((item, index) => {
       const imageBox = (<ImageBox key={index} data={item} />)
       if (listPics.length == index + 1) {
+        // if you put ref in actual Component, it will not work(don't know why, i think it will become a props but it not)
+        // so i had to put a div around my ImageBox
         return <div ref={lastBookElementRef} index={index} style = {{borderRadius:'10px'}}>{imageBox }</div>
       } else {
         return <div style={{ borderRadius: '10px' }}>{imageBox}</div>

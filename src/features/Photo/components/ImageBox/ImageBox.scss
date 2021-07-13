@@ -1,9 +1,20 @@
 .homepage__card{
   margin:0;
   width:var(--card-width);
-  border-radius: var(--card-border-radius);
+  border-radius: 10px;
   background-position: center;
+  position: relative;
   &__image{
     border-radius: 10px;
+  }
+
+  &__index{
+    position: absolute;
+    top:30px;
+    right:30px;
+    font-weight: 600;
+    font-size: 24px;
+    background-color: #000;
+    color:#ccc;
   }
 }

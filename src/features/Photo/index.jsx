@@ -6,7 +6,6 @@ import GalleryPage from './pages/YourGalleryPage/index';
 import NotFound from '../../components/NotFound/index';
 export default function Index(props) {
   const match = useRouteMatch();
-  console.log(match);
   return (
     <Switch>
       <Route exact path = {match.url} component = {HomePage}/>

@@ -1,9 +1,11 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect,useRef,useCallback} from 'react'
 import './HomePage.scss';
 import ImageBox from '../../components/ImageBox';
 import LoadingPage from '../../../../components/LoadingPage';
 import Masonry from 'react-masonry-css';
-const axios = require('axios');
+import axios from 'axios';
+import { message } from 'antd';
+
 
 const breakpointColumnsObj = {
   default: 4,
@@ -14,45 +16,74 @@ const breakpointColumnsObj = {
 export default function HomePage() {
   const [listPics, setListPics] = useState([]);
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    setLoading(true);
-    axios.get('https://picsum.photos/v2/list')
-      .then(res => {
-        if (res && res.status == 200) {
-          console.log(res);
-          setListPics(res.data);
-          setLoading(false);
+  const [pageNumber, setPageNumber] = useState(1);
+  const observer = useRef();
+  const lastBookElementRef = useCallback(
+    // we will add ref for the last item of ImgBox.
+    node => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      // when you scroll down to 
+      observer.current = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          setPageNumber(pageNumber + 1);
         }
       })
-      .catch(err => {
-        console.log(err);
-      });
+
+      if (node) observer.current.observe(node);
+    }, [loading])
+  
+  useEffect(() => {
+    
+    fetchImageList();
   }, []);
 
+  useEffect(() => {
+    fetchImageList();
+  },[pageNumber])
+
+  const fetchImageList = async () => {
+    setLoading(true);
+    const apiLink = 'https://picsum.photos/v2/list';
+    try {
+      const response = await axios({
+        method: 'GET',
+        url:apiLink,
+        params: {
+          page: pageNumber,
+          limit: 40,
+        }
+      });
+      setListPics([...listPics, ...response.data]);
+      setLoading(false);
+    } catch (error) {
+      message.error('something is wrong');
+    }
+  }
+
   const renderImageList = () => {
-    return listPics.map(item=><ImageBox key ={item.id} data = {item} />)
+    return listPics.map((item, index) => {
+      const imageBox = (<ImageBox key={index} data={item} />)
+      if (listPics.length == index + 1) {
+        return <div ref={lastBookElementRef} index={index} style = {{borderRadius:'10px'}}>{imageBox }</div>
+      } else {
+        return <div style={{ borderRadius: '10px' }}>{imageBox}</div>
+      }
+     })
   }
   return (
     <div className="page">
         <div className="container">
-        {loading || !listPics || listPics.length == 0 ? (
-          <LoadingPage />
-        ) : (
-            // <div className = "image-container">
-            //   {renderImageList()}
-            // </div>
-            <div className="image-list">
-              <Masonry
-                breakpointCols={breakpointColumnsObj}
-                className="my-masonry-grid"
-                columnClassName="my-masonry-grid_column">
-                {renderImageList()}
-              </Masonry>
-            </div>
-            
-        )
-          }
-        
+        <div className="image-list">
+          <Masonry
+            breakpointCols={breakpointColumnsObj}
+            className="my-masonry-grid"
+            columnClassName="my-masonry-grid_column">
+            {renderImageList()}
+          </Masonry>
+        </div>
+
+        {loading && <LoadingPage />}
       </div>
     </div>
   )

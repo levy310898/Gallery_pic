@@ -1,7 +1,7 @@
 import React,{useState,useEffect,useRef,useCallback} from 'react'
 import './HomePage.scss';
 import ImageBox from '../../components/ImageBox';
-import LoadingPage from '../../../../components/LoadingPage';
+import LoadingPage from 'components/LoadingPage';
 import Masonry from 'react-masonry-css';
 import axios from 'axios';
 import { message } from 'antd';

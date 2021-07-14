@@ -1,8 +1,8 @@
 import React,{Suspense} from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.scss';
-import NotFound from './components/NotFound/index';
-import Header from './components/Header';
+import NotFound from 'components/NotFound';
+import Header from 'components/Header';
 import { Spin } from 'antd';
 const Photo = React.lazy(() => import('./features/Photo/index'))
 function App() {

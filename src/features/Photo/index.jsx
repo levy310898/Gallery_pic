@@ -3,8 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import {useRouteMatch} from 'react-router-dom';
 import HomePage from './pages/HomePage/index';
 import GalleryPage from './pages/YourGalleryPage/index';
- import NotFound from '../../components/NotFound/index';
-// import NotFound from '@/components/NotFound/index';
+import NotFound from 'components/NotFound';
 
 export default function Index(props) {
   const match = useRouteMatch();
